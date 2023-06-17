@@ -9,6 +9,7 @@ import Footer from "../common/footer";
 import { ThemeContextProvider } from "@/context/context";
 import { ColorRing } from  'react-loader-spinner'
 import Upload from "./imageUploader";
+import { setFips } from "crypto";
 
 export default function Login() {
 
@@ -16,6 +17,9 @@ export default function Login() {
   const [showUploader, setShowUploader] = useState<boolean>(false);
   const [displayName, setDisplayName] = useState<string|null>("");
   const [userPass, setPass] = useState<string>("");
+  const [files, setFiles] = useState<[]>([]);
+
+
 
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoding] = useState(true);
@@ -50,6 +54,7 @@ console.log(v)
        setIsLoding(false)
        localStorage.setItem('token_auth', v.token);
        localStorage.setItem('user_name', v.name);
+       localStorage.setItem('user_id_r', v.id);
        setDisplayName(v.name);
 
     })
@@ -65,17 +70,18 @@ console.log(v)
 const getFiles=()=>{
   const myHeaders = new Headers();
   const token = localStorage.getItem('token_auth');
+  const user_id_r= localStorage.getItem('user_id_r');
+
   myHeaders.append('Content-Type', 'application/json');
-  let data={  id: '648d4e5cf73ce300389a2154',token}
-  const res= fetch('http://127.0.0.1:5004/getFiles', {
+  let data={  id: '648d4e5cf73ce300389a2154',token,user_id_r}
+  const res= fetch(`http://127.0.0.1:5004/getFiles?id=${user_id_r}`, {
     method: 'GET',
     headers: myHeaders,
   })   
   res.then((v)=>v.json())
   .then((v)=>{
      if(v.status==="ok"  ){
-      
-      console.log(v)
+      setFiles(v.records)
       }
 
   
@@ -102,13 +108,26 @@ useEffect(() => {
   }
 
 },[])
+const getListOfFiles =(files:[]) => {
+console.log(files)
+  let fileList:any=[]
+  files.map((v:any)=>{
+    if(v.imgCollection && v.imgCollection.length > 0){
+      fileList=[...fileList,...v.imgCollection]
+    }
+    
 
+  })
+
+console.log(fileList)
+return fileList;
+}
 if(showUploader){
   return (
     <>
    <Upload/>
    <div style={{display:"flex",flexDirection:"row",justifyContent:"center",marginTop:50}}>
-   <span  style={{textAlign:"center",cursor:"pointer",color:'blue',fontSize:18}} onClick={()=>{setShowUploader(false)}}>{"<< Close >>"}</span>
+   <span  style={{textAlign:"center",cursor:"pointer",color:'blue',fontSize:18}} onClick={()=>{setShowUploader(false);getFiles();}}>{"<< Close >>"}</span>
    </div>
    </>
   )
@@ -172,17 +191,11 @@ if(isLoading){
    </div>
   </div>
 <div className="flex-area">
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-   <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
-  
+
+  {files && files.length > 0?
+     getListOfFiles(files).map((v:any)=> <span><AiFillFileText  size={40}/><a target="_blank" href={v}>{v.substring(v.lastIndexOf('/')+1).substring(0, 8)}</a></span>)
+   :<p>No Files Found</p>}
+
 
    </div>
 </div>      

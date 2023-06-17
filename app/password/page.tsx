@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react"
 
 export default function Login() {
 
-  const [userName, setUserName] = useState<string>("");
+  const [oldPass, setOldPass] = useState<string>("");
   const [userPass, setPass] = useState<string>("");
   const [tokenStatus, setTokenStatus] = useState("");
   const [isUpdated, setUpdated] = useState(false);
@@ -62,7 +62,7 @@ useEffect(() => {},[])
     <div style={{textAlign:'center',paddingBottom:30}}>
   <Link href="/" style={{margin:10,cursor:'pointer',color:"blue"}}>Home</Link>
   </div>
-     <input type="password" placeholder="Old Password" onChange={(v:any)=>{setUserName(v.target.value)}} className="input-field"/>
+     <input type="password" placeholder="Old Password" onChange={(v:any)=>{setOldPass(v.target.value)}} className="input-field"/>
      <input type="password"  placeholder="New Password" onChange={(v:any)=>{setPass(v.target.value)}} className="input-field"/>
     
     </div>
