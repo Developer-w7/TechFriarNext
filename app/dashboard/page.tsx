@@ -1,31 +1,23 @@
 "use client"
 
 import Link from "next/link";
-import { useContext, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { AiFillFileText } from 'react-icons/ai';
-import NavBar from "../common/navbar";
-import Footer from "../common/footer";
-import { ThemeContextProvider } from "@/context/context";
-import { ColorRing } from  'react-loader-spinner'
-import Upload from "./imageUploader";
+import NavBar from "@/src/common/navbar";
+import Footer from "@/src/common/footer";
 
 export default function Login() {
 
   const [userName, setUserName] = useState<string>("");
-  const [showUploader, setShowUploader] = useState<boolean>(false);
-  const [displayName, setDisplayName] = useState<string|null>("");
   const [userPass, setPass] = useState<string>("");
-
+  const [tokenStatus, setTokenStatus] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const [isLoading, setIsLoding] = useState(true);
 
   const userNameRef=useRef("");
   const userPassRef=useRef("");
+  // const ref = React.useRef<HTMLInputElement>(null)
 
-  const { message, setMessage }:any = useContext(ThemeContextProvider);
-
-  
   const userLogin=()=>{
    
     
@@ -46,112 +38,36 @@ export default function Login() {
     res.then((v)=>v.json())
     .then((v)=>{
        if(v.status==="ok" && v.token !== "" ){setLoggedIn(true)}else{setLoggedIn(false)}
-console.log(v)
-       setIsLoding(false)
-       localStorage.setItem('token_auth', v.token);
-       localStorage.setItem('user_name', v.name);
-       setDisplayName(v.name);
 
+
+       localStorage.setItem('token_auth', v.token);
     })
     .catch((e)=>{
       setLoggedIn(false)
-      setIsLoding(false)
     console.log(e)
     })
     
     
     }
 
-const getFiles=()=>{
-  const myHeaders = new Headers();
-  const token = localStorage.getItem('token_auth');
-  myHeaders.append('Content-Type', 'application/json');
-  let data={  id: '648d4e5cf73ce300389a2154',token}
-  const res= fetch('http://127.0.0.1:5004/getFiles', {
-    method: 'GET',
-    headers: myHeaders,
-  })   
-  res.then((v)=>v.json())
-  .then((v)=>{
-     if(v.status==="ok"  ){
-      
-      console.log(v)
-      }
-
-  
-
-  })
-  .catch((e)=>{
-    setLoggedIn(false)
-    setIsLoding(false)
-  console.log(e)
-  })
-  
-  
-}
-
-
 useEffect(() => {
-  getFiles();
+
   const token = localStorage.getItem('token_auth');
   if (token) {
-    setIsLoding(false)
     setLoggedIn(true)
-  }else{
-    setIsLoding(false)
   }
 
 },[])
 
-if(showUploader){
-  return (
-    <>
-   <Upload/>
-   <div style={{display:"flex",flexDirection:"row",justifyContent:"center",marginTop:50}}>
-   <span  style={{textAlign:"center",cursor:"pointer",color:'blue',fontSize:18}} onClick={()=>{setShowUploader(false)}}>{"<< Close >>"}</span>
-   </div>
-   </>
-  )
-}
-if(isLoading){
-  return (
-    <div>
-    {/* <NavBar/> */}
-    <div className="loader">
-    <ColorRing
-    visible={true}
-    height="80"
-    width="80"
-    ariaLabel="blocks-loading"
-    wrapperStyle={{}}
-    wrapperClass="blocks-wrapper"
-    colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
-  />
-  </div>
-  </div>
-  )
-}
+
     return (
 
       
     <div>
 
-    {/* <NavBar/> */}
+    <NavBar/>
     <div style={{minHeight:"100vh"}}>
-
-
  
-    {!isLoggedIn ? <>
-
-    
-    <div style={{display:"flex",flexDirection:"column",padding:30}}>
-     <input type="text" placeholder="User Name" onChange={(v:any)=>{setUserName(v.target.value)}} className="input-field"/>
-     <input type="password"  placeholder="Password" onChange={(v:any)=>{setPass(v.target.value)}} className="input-field"/>
-    
-    </div>
-    <div style={{display:'flex',alignItems:"center",justifyContent:"center"}}> <button  onClick={()=>{userLogin()}} className="btn-lgn">Login</button></div>
-     
-        </>:
         
         
         <>
@@ -159,18 +75,10 @@ if(isLoading){
 <div  style={{display:"flex", alignItems:'center', flexDirection:'column'}}>
   <div>
   <Link href="/password" style={{margin:10,cursor:'pointer',color:"blue"}}>Change Password</Link>
-  <span onClick={()=>{setLoggedIn(false);localStorage.removeItem("token_auth");}} style={{margin:20,cursor:'pointer',color:"blue"}}>Logout</span>
+  <span onClick={()=>{setLoggedIn(false);}} style={{margin:20,cursor:'pointer',color:"blue"}}>Logout</span>
   </div>
- 
-   <p style={{marginTop:50,fontSize:30}}>Welcome, {displayName||"user"}</p>
-  
-   <div className="container">
-   <div style={{display:"flex",justifyContent:"flex-end",margin:"20px 0",width:"100%"}}>
-   
-   <a onClick={()=>{setShowUploader(true)}} className="upload-btn">Upload Files</a>
+   <p style={{marginTop:50}}>Welcome, To Home Page</p>
 
-   </div>
-  </div>
 <div className="flex-area">
    <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
    <span><AiFillFileText  size={40}/><a target="_blank" href="https://www.antennahouse.com/hubfs/xsl-fo-sample/pdf/basic-link-1.pdf">Download</a></span>
@@ -189,7 +97,7 @@ if(isLoading){
   
          
          </>
-      }
+      
       {/* <Footer/> */}
     </div>
     </div>

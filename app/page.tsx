@@ -1,3 +1,6 @@
+
+
+
 import Image from 'next/image'
 import NavBar from '@/src/common/navbar'
 
@@ -6,11 +9,14 @@ import Layout from '@/src/home';
 import Home from '@/src/home';
 
 import RootLayout from './layout';
+import Context from '@/context/context';
 
 export default function App() {
   return (
    <RootLayout>
-   <Home/>
+    <Context>
+        <Home/>
+   </Context>
    </RootLayout>
   )
 }

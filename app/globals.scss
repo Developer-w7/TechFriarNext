@@ -1,9 +1,9 @@
 @use 'variables.module' as variables;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+// @tailwind base;
+// @tailwind components;
+// @tailwind utilities;
+// @import '~bootstrap/scss/bootstrap';
 
 
 :root {
@@ -62,3 +62,25 @@ a{
   justify-content: center;
   
 }
+
+.loader{display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;}
+
+  .upload-btn{
+    border: 2px solid blue;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    
+    
+  }
+  
+  .up_loader{display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  flex-direction: column;
+  
+  }
