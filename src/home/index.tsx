@@ -178,7 +178,7 @@ if(isLoading){
 <div  style={{display:"flex", alignItems:'center', flexDirection:'column'}}>
   <div>
   <Link href="/password" style={{margin:10,cursor:'pointer',color:"blue"}}>Change Password</Link>
-  <span onClick={()=>{setLoggedIn(false);localStorage.removeItem("token_auth");}} style={{margin:20,cursor:'pointer',color:"blue"}}>Logout</span>
+  <span onClick={()=>{setLoggedIn(false);localStorage.removeItem("token_auth");localStorage.removeItem("user_id_r");}} style={{margin:20,cursor:'pointer',color:"blue"}}>Logout</span>
   </div>
  
    <p style={{marginTop:50,fontSize:30}}>Welcome, {displayName||"user"}</p>
