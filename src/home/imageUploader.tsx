@@ -24,14 +24,14 @@ function onFileChange(e:any) {
  function onSubmit(e:any) {
     e.preventDefault()
     var formData = new FormData();
-
+    const user_id_r= localStorage.getItem('user_id_r');
     
     for (const key of Object.keys(imgCollection)) {
         console.log(imgCollection[key])
         formData.append("files", imgCollection[key])
     }
     
-    fetch("http://localhost:5004/uploadImages", {
+    fetch(`http://localhost:5004/uploadImages?id=${user_id_r}`, {
         method: 'POST',
         body: formData,
         headers: {
