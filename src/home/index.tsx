@@ -74,6 +74,8 @@ const getFiles=()=>{
 
   myHeaders.append('Content-Type', 'application/json');
   let data={  id: '648d4e5cf73ce300389a2154',token,user_id_r}
+
+  if(user_id_r){
   const res= fetch(`http://127.0.0.1:5004/getFiles?id=${user_id_r}`, {
     method: 'GET',
     headers: myHeaders,
@@ -92,6 +94,8 @@ const getFiles=()=>{
     setIsLoding(false)
   console.log(e)
   })
+
+}
   
   
 }
